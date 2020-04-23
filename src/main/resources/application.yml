@@ -1,0 +1,60 @@
+#编码格式
+spring:
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  #连接数据库
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://127.0.0.1:3306/template?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #数据源其他配置
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    #配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙  
+    filters: stat,wall
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true  
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+  #开启热部署
+  devtools:
+    restart:
+      enabled: true
+  #关闭模板缓存
+  freemarker:
+    cache: false
+    charset: UTF-8
+    check-template-location: true
+    content-type: text/html; charset=utf-8
+    expose-request-attributes: true
+    expose-session-attributes: true
+    request-context-attribute: request
+    suffix: .ftl
+    template-loader-path:
+    - classpath:/templates/
+mybatis:
+  config-location: classpath:com/wakaka/dao/mybatis/mybatis-config.xml
+  mapper-locations:
+  - classpath:com/wakaka/dao/mapper/*.xml
+#jwt配置
+audience:
+  # 代表这个JWT的接收对象,存入audience
+  clientId: 098f6bcd4621d373cade4e832627b4f6
+  # 密钥, 经过Base64加密, 可自行替换
+  base64Secret: MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=
+  # JWT的签发主体，存入issuer
+  name: restapiuser
+  # 过期时间，时间戳
+  expiresSecond: 172800
