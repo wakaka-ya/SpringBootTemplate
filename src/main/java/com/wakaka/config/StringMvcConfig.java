@@ -29,7 +29,7 @@ public class StringMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		//拦截路径可自行配置多个 可用 ，分隔开
-		registry.addInterceptor(new JwtInterceptor()).addPathPatterns("/**");
+		registry.addInterceptor(new JwtInterceptor()).addPathPatterns("/**").excludePathPatterns("/","/login.html","/LoginIn","/getVerCode","/static/**");
 	}
 
 	@Override

@@ -1,19 +1,20 @@
 package com.wakaka.controller;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Date;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.alibaba.fastjson.JSONObject;
+import com.wakaka.dao.mapper.SysRoleMapper;
 import com.wakaka.dao.mapper.SysUserloginMapper;
-import com.wakaka.dao.pojo.*;
+import com.wakaka.dao.pojo.SysRole;
+import com.wakaka.dao.pojo.SysRoleExample;
+import com.wakaka.dao.pojo.SysRoleExample.Criteria;
+import com.wakaka.dao.pojo.SysUser;
+import com.wakaka.enums.StatusEnum;
+import com.wakaka.jwt.pojo.Audience;
+import com.wakaka.service.SysUserService;
 import com.wakaka.util.CheckStrUtil;
+import com.wakaka.util.JwtTokenUtil;
+import com.wakaka.util.PasswordEncoderUtil;
+import com.wakaka.util.VerifyCode;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,20 +22,24 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
-import com.wakaka.dao.mapper.SysRoleMapper;
-import com.wakaka.dao.pojo.SysRoleExample.Criteria;
-import com.wakaka.enums.StatusEnum;
-import com.wakaka.service.SysUserService;
-import com.wakaka.util.PasswordEncoderUtil;
-import com.wakaka.util.VerifyCode;
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Description 登录控制
  * USER: zfy
  * Date: 2020/1/16 16:47
  */
+@Slf4j
 @Controller
 public class IndexController {
 
@@ -68,6 +73,8 @@ public class IndexController {
         return "login";
     }
 
+    @Autowired
+    private Audience audience;
     /**
      * 验证码
      */
@@ -104,7 +111,7 @@ public class IndexController {
     @ResponseBody
     public String loginIn(HttpServletRequest request, ModelMap model) {
         JSONObject object = new JSONObject();
-
+        String userId = UUID.randomUUID().toString();
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
         String verCode = request.getParameter("verCode");
@@ -137,6 +144,11 @@ public class IndexController {
         request.getSession().setAttribute("user", sysUser);
         object.put("status", true);
         object.put("msg", "登录成功");
+
+        // 创建token
+        String token = JwtTokenUtil.createJWT(userId, userName, sysUser.getType(), audience);
+        log.info("### 登录成功, token={} ###", token);
+        object.put("token",token);
         sysUserloginMapper.updateLastLoginTime(sysUser.getUid());
         request.getSession().setAttribute("appName", "Template");
         return object.toJSONString();
