@@ -3,17 +3,23 @@ package com.wakaka.controller;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.wakaka.dao.mapper.SysUserloginMapper;
 import com.wakaka.dao.pojo.*;
+import com.wakaka.jwt.pojo.Audience;
 import com.wakaka.util.CheckStrUtil;
+import com.wakaka.util.JwtTokenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,6 +43,8 @@ import com.wakaka.util.VerifyCode;
  */
 @Controller
 public class IndexController {
+    @Autowired
+    private Audience audience;
 
     @Autowired
     private SysUserService sysUserService;
@@ -46,27 +54,6 @@ public class IndexController {
 
     @Autowired
     private SysUserloginMapper sysUserloginMapper;
-
-    @GetMapping("/index")
-    public String indexHtml() {
-        return "index";
-    }
-
-    /**
-     * 欢迎页
-     */
-    @GetMapping("/home")
-    public String homeHtml() {
-        return "home/home";
-    }
-
-    /**
-     * 登录
-     */
-    @GetMapping("/")
-    public String loginHtml() {
-        return "login";
-    }
 
     /**
      * 验证码
@@ -133,10 +120,12 @@ public class IndexController {
             object.put("msg", "账户封禁（请联系管理员）");
             return object.toJSONString();
         }
-
+        String userId = UUID.randomUUID().toString();
         request.getSession().setAttribute("user", sysUser);
         object.put("status", true);
         object.put("msg", "登录成功");
+        String token = JwtTokenUtil.createJWT(userId, userName, sysUser.getType(), audience);
+        object.put("token",token);
         sysUserloginMapper.updateLastLoginTime(sysUser.getUid());
         request.getSession().setAttribute("appName", "Template");
         return object.toJSONString();
@@ -149,9 +138,11 @@ public class IndexController {
      */
     @PostMapping("/jsonMenu")
     @ResponseBody
-    public String jsonMenu(HttpSession session) {
+    public String jsonMenu(HttpServletRequest request) {
         JSONObject object = new JSONObject();
-        SysUser user = (SysUser)session.getAttribute("user");
+        String token = Arrays.asList(request.getCookies()).stream().filter(ck -> ck.getName().equals("token")).map(Cookie::getValue).collect(Collectors.toList()).get(0);
+        SysUser user = sysUserService.getUserByTokem(token);
+        //SysUser user = (SysUser)session.getAttribute("user");
         SysRoleExample example = new SysRoleExample();
         Criteria criteria = example.createCriteria();
         criteria.andRoleIdEqualTo(user.getType());

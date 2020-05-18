@@ -28,3 +28,23 @@ layui.define(['layer'], function(exports) {
 
 	exports('common', common);
 });
+
+$.ajaxSetup({
+	contentType: "application/x-www-form-urlencoded;charset=utf-8",
+	complete: function(XMLHttpRequest, textStatus) {
+
+	},
+	statusCode: {
+		403: function(data) {
+			console.log(data)
+			//alert('登录失效，请重新登录');
+			window.location.href = "login.html";
+		},
+		504: function() {
+			alert('数据获取/输入失败，服务器没有响应。504');
+		},
+		500: function() {
+			alert('服务器有误。500');
+		}
+	}
+});

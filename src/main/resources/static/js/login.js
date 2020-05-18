@@ -64,8 +64,6 @@ layui.define(['layer', 'form', 'tips'], function(exports) {
             		 var date = new Date();
             		 date.setTime(date.getTime()+30*60*1000);
             		 $.cookie('token', json.token, {expires: date});
-            		 $.cookie('userName',$("input[name='userName']").val(),{expires: date});
-            		 $.cookie('password',$("input[name='password']").val(),{expires: date});
                      location.href = '/index';
             	 }else{
             		 tips.warning(json.msg, 0, 1500);

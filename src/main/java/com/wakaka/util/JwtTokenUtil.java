@@ -1,5 +1,6 @@
 package com.wakaka.util;
 
+import com.wakaka.dao.pojo.SysUser;
 import com.wakaka.enums.TokenResultCode;
 import com.wakaka.exception.BizException;
 import com.wakaka.jwt.pojo.Audience;
@@ -11,6 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.Date;
+
 /**
  * Description JwtToken创建工具类
  * USER: zfy
@@ -20,11 +22,13 @@ public class JwtTokenUtil {
     private static Logger log = LoggerFactory.getLogger(JwtTokenUtil.class);
 
     public static final String AUTH_HEADER_KEY = "Authorization";
+    public static final String COOKIE = "Cookie";
 
     public static final String TOKEN_PREFIX = "Bearer ";
 
     /**
      * 解析jwt
+     *
      * @param jsonWebToken
      * @param base64Security
      * @return
@@ -38,7 +42,7 @@ public class JwtTokenUtil {
         } catch (ExpiredJwtException eje) {
             log.error("===== Token过期 =====", eje);
             throw new BizException(TokenResultCode.PERMISSION_TOKEN_EXPIRED);
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("===== token解析异常 =====", e);
             throw new BizException(TokenResultCode.PERMISSION_TOKEN_INVALID);
         }
@@ -46,6 +50,7 @@ public class JwtTokenUtil {
 
     /**
      * 构建jwt
+     *
      * @param userId
      * @param username
      * @param role
@@ -96,27 +101,30 @@ public class JwtTokenUtil {
 
     /**
      * 从token中获取用户名
+     *
      * @param token
      * @param base64Security
      * @return
      */
-    public static String getUsername(String token, String base64Security){
+    public static String getUsername(String token, String base64Security) {
         return parseJWT(token, base64Security).getSubject();
     }
 
     /**
      * 从token中获取用户ID
+     *
      * @param token
      * @param base64Security
      * @return
      */
-    public static String getUserId(String token, String base64Security){
+    public static String getUserId(String token, String base64Security) {
         String userId = parseJWT(token, base64Security).get("userId", String.class);
         return Base64Util.decode(userId);
     }
 
     /**
      * 是否已过期
+     *
      * @param token
      * @param base64Security
      * @return
@@ -124,4 +132,24 @@ public class JwtTokenUtil {
     public static boolean isExpiration(String token, String base64Security) {
         return parseJWT(token, base64Security).getExpiration().before(new Date());
     }
+
+    /**
+     * 刷新token
+     * @param claims
+     * @return
+     */
+    public static String refreshToken(Claims claims, Audience audience) {
+        Date expiration = claims.getExpiration();
+        long minute = DateUtil.getMinuteSubDate(new Date(), expiration);
+        if (minute <= 30L) {
+            String userId = claims.get("userId").toString();
+            String role = claims.get("role").toString();
+            String userName = claims.getSubject();
+            String newtoken = createJWT(userId, userName, role, audience);
+            return newtoken;
+        }
+        log.error("刷新Token失败，Token已过期30分钟以上");
+        throw new BizException(TokenResultCode.PERMISSION_TOKEN_EXPIRED);
+    }
+
 }

@@ -1,14 +1,12 @@
 package com.wakaka.controller;
 
 import com.wakaka.dao.mapper.SysMenuMapper;
+import com.wakaka.dao.pojo.SysMenu;
 import com.wakaka.util.LayuiTableUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,5 +34,11 @@ public class SysMenuController {
         map.put("limit", limit);
         List<Map<String, Object>> list = sysMenuMapper.getMenuInfoList(map);
         return LayuiTableUtil.getTableJson(list, count);
+    }
+
+    @GetMapping("/edit.html")
+    public String editHtml(@RequestParam String id){
+        sysMenuMapper.selectByPrimaryKey(id);
+        return "sys_menu/edit.html";
     }
 }

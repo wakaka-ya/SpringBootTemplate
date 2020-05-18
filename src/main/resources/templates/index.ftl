@@ -40,7 +40,7 @@
 		<div class="layui-header" style="background-color: #20222a">
 			<a class="layui-logo">${appName?if_exists}</a>
 			<ul class="layui-nav layui-layout-right">
-				<li class="layui-nav-item" lay-unselect><a href="javascript:;">${user.loginName?if_exists}</a>
+				<li class="layui-nav-item" lay-unselect><a href="javascript:;">${(user.loginName)?if_exists}</a>
 					<dl class="layui-nav-child">
 						<dd>
 							<a href="javascript:;" onclick="ChangePass()">修改密码</a>

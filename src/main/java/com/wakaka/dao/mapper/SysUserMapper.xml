@@ -288,6 +288,7 @@
         su.login_name AS loginName,
         sul.real_name AS realName,
         su.cell AS cell,
+        sul.id_card AS idCard,
         sul.login_time AS lastLoginTime
     FROM
         sys_user su

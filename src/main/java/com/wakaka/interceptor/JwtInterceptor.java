@@ -14,8 +14,13 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Description Token拦截器
@@ -23,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
  * Date: 2020/4/1 10:57
  */
 @Slf4j
-public class JwtInterceptor extends HandlerInterceptorAdapter{
+public class JwtInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     private Audience audience;
@@ -44,19 +49,24 @@ public class JwtInterceptor extends HandlerInterceptorAdapter{
             return true;
         }
 
+        final String cookie = request.getHeader(JwtTokenUtil.COOKIE);
+
         // 获取请求头信息authorization信息
         final String authHeader = request.getHeader(JwtTokenUtil.AUTH_HEADER_KEY);
         log.info("## authHeader= {}", authHeader);
-
-        if (StringUtils.isBlank(authHeader) || !authHeader.startsWith(JwtTokenUtil.TOKEN_PREFIX)) {
-            log.info("### 用户未登录，请先登录 ###");
-            throw new BizException(TokenResultCode.USER_NOT_LOGGED_IN);
+        if (StringUtils.isBlank(cookie) || !cookie.contains("token")) {
+            if(StringUtils.isBlank(authHeader) || !authHeader.startsWith(JwtTokenUtil.TOKEN_PREFIX)){
+                log.info("### 用户未登录，请先登录 ###");
+                throw new BizException(TokenResultCode.USER_NOT_LOGGED_IN);
+            }
+        }
+        String token = Arrays.asList(request.getCookies()).stream().filter(ck -> ck.getName().equals("token")).map(Cookie::getValue).collect(Collectors.toList()).get(0);
+        if (StringUtils.isBlank(token)) {
+            // 如果cookie中token为空则获取请求头中token
+            token = authHeader.substring(7);
         }
 
-        // 获取token
-        final String token = authHeader.substring(7);
-
-        if(audience == null){
+        if (audience == null) {
             BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
             audience = (Audience) factory.getBean("audience");
         }

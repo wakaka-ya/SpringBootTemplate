@@ -20,7 +20,7 @@ public interface SysMenuMapper {
 
     List<SysMenu> selectByExample(SysMenuExample example);
 
-    SysMenu selectByPrimaryKey(Integer id);
+    SysMenu selectByPrimaryKey(String id);
 
     int updateByExampleSelective(@Param("record") SysMenu record, @Param("example") SysMenuExample example);
 

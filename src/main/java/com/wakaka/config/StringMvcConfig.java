@@ -13,9 +13,11 @@ public class StringMvcConfig implements WebMvcConfigurer {
 	public void addViewControllers(ViewControllerRegistry registry) {
 		// TODO Auto-generated method stub
 		registry.addViewController("/").setViewName("login");
+		registry.addViewController("/home").setViewName("home/home");
 		registry.addViewController("/login.html").setViewName("login");
 		//WebMvcConfigurer.super.addViewControllers(registry);
 		registry.addViewController("/index.html").setViewName("index");
+		registry.addViewController("/index").setViewName("index");
 	}
 	/*@Override
 	public void addInterceptors(InterceptorRegistry registry) {
@@ -29,7 +31,7 @@ public class StringMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		//拦截路径可自行配置多个 可用 ，分隔开
-		registry.addInterceptor(new JwtInterceptor()).addPathPatterns("/**");
+		registry.addInterceptor(new JwtInterceptor()).addPathPatterns("/**").excludePathPatterns("/","/login.html","/LoginIn","/getVerCode","/static/**");
 	}
 
 	@Override

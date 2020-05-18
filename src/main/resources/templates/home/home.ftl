@@ -32,7 +32,7 @@ body {
 	<div class="layui-tab-content">
 
 		<div id="main">
-			<h4 style="font-size: 26px;">你好，${user.loginName!'wakaka'}</h4>
+			<h4 style="font-size: 26px;">你好，${(user.loginName)!'wakaka'}</h4>
 		</div>
 
 	</div>
