@@ -18,8 +18,7 @@ import javax.servlet.http.HttpSession;
 import com.wakaka.dao.mapper.SysUserloginMapper;
 import com.wakaka.dao.pojo.*;
 import com.wakaka.jwt.pojo.Audience;
-import com.wakaka.util.CheckStrUtil;
-import com.wakaka.util.JwtTokenUtil;
+import com.wakaka.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,8 +32,6 @@ import com.wakaka.dao.mapper.SysRoleMapper;
 import com.wakaka.dao.pojo.SysRoleExample.Criteria;
 import com.wakaka.enums.StatusEnum;
 import com.wakaka.service.SysUserService;
-import com.wakaka.util.PasswordEncoderUtil;
-import com.wakaka.util.VerifyCode;
 
 /**
  * Description 登录控制
@@ -120,7 +117,7 @@ public class IndexController {
             object.put("msg", "账户封禁（请联系管理员）");
             return object.toJSONString();
         }
-        String userId = UUID.randomUUID().toString();
+        String userId = sysUser.getUid();
         request.getSession().setAttribute("user", sysUser);
         object.put("status", true);
         object.put("msg", "登录成功");
@@ -140,9 +137,8 @@ public class IndexController {
     @ResponseBody
     public String jsonMenu(HttpServletRequest request) {
         JSONObject object = new JSONObject();
-        String token = Arrays.asList(request.getCookies()).stream().filter(ck -> ck.getName().equals("token")).map(Cookie::getValue).collect(Collectors.toList()).get(0);
+        String token = RequestUtil.getToken(request);
         SysUser user = sysUserService.getUserByTokem(token);
-        //SysUser user = (SysUser)session.getAttribute("user");
         SysRoleExample example = new SysRoleExample();
         Criteria criteria = example.createCriteria();
         criteria.andRoleIdEqualTo(user.getType());

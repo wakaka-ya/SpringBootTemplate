@@ -310,4 +310,13 @@
 		type = #{roleId,jdbcType=VARCHAR}
   </select>
 
+
+  <select id="selectUserByUid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+    sys_user
+    WHERE
+    uid = #{uid,jdbcType=VARCHAR}
+  </select>
 </mapper>

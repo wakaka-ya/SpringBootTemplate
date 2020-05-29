@@ -2,6 +2,7 @@ package com.wakaka.service;
 
 import com.wakaka.interceptor.JwtInterceptor;
 import com.wakaka.jwt.pojo.Audience;
+import com.wakaka.util.Base64Util;
 import com.wakaka.util.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,8 @@ public class SysUserService {
 	public SysUser getUserByTokem(String token){
 		Claims claims = JwtTokenUtil.parseJWT(token, audience.getBase64Secret());
 		String userId = claims.get("userId").toString();
-		SysUser sysUser = sysUserMapper.selectByPrimaryKey(Integer.valueOf(userId));
+		String encode = Base64Util.decode(userId);
+		SysUser sysUser = sysUserMapper.selectUserByUid(encode);
 		return sysUser;
 	}
 

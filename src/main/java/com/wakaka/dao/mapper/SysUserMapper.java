@@ -41,4 +41,6 @@ public interface SysUserMapper {
     int countallUserInfo();
 
     List<Integer> selectcheckUserInfo(String roleId);
+
+    SysUser selectUserByUid(String uid);
 }

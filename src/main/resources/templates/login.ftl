@@ -160,6 +160,7 @@
     <script src="/static/js/jquery-1.11.3.js"></script>
     <script src="/static/layui/layui.js"></script>
     <script src="/static/js/jquery.cookie.js"></script>
+    <script src="/static/js/common.js"></script>
     <script>
         layui.config({ base:'/static/js/' }).use('login');
     </script>

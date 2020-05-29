@@ -77,7 +77,8 @@
 	</div>
 	<script src="/static/js/jquery-1.11.3.js"></script>
 	<script src="/static/layui/layui.js"></script>
-
+	<script src="/static/js/common.js"></script>
+	<script src="/static/js/jquery.cookie.js"></script>
 	<script>
 		layui.config({
 			base : '/static/'
@@ -288,6 +289,9 @@
 					type : "POST",
 					url : url,
 					dataType : "json",
+					headers: {
+						'authorization': $.cookie("token")
+					},
 					success : function(json) {
 						if (json.status) {
 							doIT(json.menu);
