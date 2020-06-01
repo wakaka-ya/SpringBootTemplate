@@ -1,6 +1,7 @@
 package com.wakaka.config;
 
 import com.wakaka.interceptor.JwtInterceptor;
+import com.wakaka.interceptor.MyInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -17,20 +18,20 @@ public class StringMvcConfig implements WebMvcConfigurer {
 		//WebMvcConfigurer.super.addViewControllers(registry);
 		registry.addViewController("/index.html").setViewName("index");
 	}
-	/*@Override
+	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		// TODO Auto-generated method stub
 		WebMvcConfigurer.super.addInterceptors(registry);
 		registry.addInterceptor(new MyInterceptor()).addPathPatterns("/**").excludePathPatterns("/","/login.html","/LoginIn","/loginInfo","/getVerCode","/static/**");
-	}*/
+	}
 	/**
 	 * 添加拦截器
-	 */
+	 *//*
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		//拦截路径可自行配置多个 可用 ，分隔开
 		registry.addInterceptor(new JwtInterceptor()).addPathPatterns("/**").excludePathPatterns("/","/login.html","/LoginIn","/getVerCode","/static/**");
-	}
+	}*/
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
