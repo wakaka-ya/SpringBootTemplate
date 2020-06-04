@@ -12,27 +12,6 @@
 	(window.top === window.self)
 			|| (window.top.location.href = window.self.location.href);
 </script>
-<style type="text/css">
-/*#ul li dl {
-            background-color: #000;
-        }
-
-        .layui-side {
-            font-style: normal;
-        }
-
-        #ul a {
-            
-            font-weight: 500;
-        }
-        #ul cite {
-            color: #d2d2d2 !important;
-        }
-        #ul li a:hover {
-            color: #ffffff !important;
-            font-weight: 500;
-        }*/
-</style>
 </head>
 <body class="layui-layout-body layui-unselect">
 	<div class="layui-layout layui-layout-admin">
@@ -67,7 +46,6 @@
 			</div>
 		</div>
 		<!--侧边菜单结束-->
-
 
 		<!--内容主体区域开始-->
 		<div class="layui-body" data-type="" data-title="公告栏"

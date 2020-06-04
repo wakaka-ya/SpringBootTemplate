@@ -19,7 +19,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">角色名称</label>
 		            <div class="layui-input-block">
-		                <input type="text" name="roleName" id="roleName" autocomplete="off" class="layui-input" value="${item.roleName?if_exists}">
+		                <input type="text" name="roleName" id="roleName" autocomplete="off" class="layui-input-block" value="${item.roleName?if_exists}">
 		            </div>
 				</div>
 				<div class="layui-form-item">

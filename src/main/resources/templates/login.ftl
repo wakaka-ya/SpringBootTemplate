@@ -106,13 +106,6 @@
             line-height: 50px;
         }
 
-        ._disable {
-            pointer-events: none;
-        }
-
-        #_code_cut:hover {
-            border: 1px solid grey !important;
-        }
         .lau-sign-form {
             padding:0;
         }
