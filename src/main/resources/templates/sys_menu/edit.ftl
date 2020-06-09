@@ -34,6 +34,9 @@
                 <label class="layui-form-label">预览：</label>
                 <i class="layui-icon ${sysMenu.icon?if_exists}" style="font-size: 30px;"></i>
             </div>
+            <div class="layui-inline" style="margin-left: 6%;">
+                <button class="layui-btn" id="chooseIcon">选择图标</button>
+            </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">链接：</label>
@@ -45,7 +48,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">排序：</label>
                 <div class="layui-input-inline">
-                    <input type="tel" name="icon" value="${sysMenu.rank?if_exists}" lay-verify="required" autocomplete="off" class="layui-input">
+                    <input type="text" name="rank" value="${sysMenu.rank?if_exists}" lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
             </div>
         </div>
@@ -60,8 +63,8 @@
 <script>
 
     layui.use([ 'form', 'jquery' ], function() {
-        var form = layui.form;
-        var $ = layui.jquery;
+        let form = layui.form;
+        let $ = layui.jquery;
         //form.render();
         //监听提交
         form.on('submit(submit)', function(data) {
@@ -83,6 +86,21 @@
                 }
             });
             return false;
+        });
+    });
+
+    $('#chooseIcon').on('click', function(){
+        layer.open({
+            type: 2,
+            // title: '很多时候，我们想最大化看，比如像这个页面。',
+            shadeClose: true,
+            shade: 0.5,
+            maxmin: true, // 开启最大化最小化按钮
+            area: ['80%', '80%'],
+            content: "/sys_layuiIcon/table.html",
+            headers: {
+                'authorization': 'Bearer '+$.cookie("token")
+            }
         });
     });
 </script>

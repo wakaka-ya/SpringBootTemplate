@@ -189,7 +189,10 @@ function showMinDetail(Url)
         shade: 0.5,
         maxmin: true, // 开启最大化最小化按钮
         area: ['30%', '80%'],
-        content: Url
+        content: Url,
+        headers: {
+            'authorization': 'Bearer '+$.cookie("token")
+        }
     });
 }
 

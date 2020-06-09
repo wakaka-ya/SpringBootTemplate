@@ -27,8 +27,7 @@ layui.define(['layer'], function(exports) {
 	};
 
 	exports('common', common);
-});
-$(function(){
+
 	$.ajaxSetup({
 		contentType: "application/x-www-form-urlencoded;charset=utf-8",
 		complete: function(XMLHttpRequest, textStatus) {
